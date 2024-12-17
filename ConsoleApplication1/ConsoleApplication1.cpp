@@ -1,16 +1,40 @@
-#include<iostream>
+#include <iostream>
+#include <cstdlib>
 #include<stdlib.h>
-#include<cstdlib>
-#include<ctime>
-#include "headerFile.h";
+#include <ctime>
+#include <limits>
+#include "HeaderFile.h";
+
 using namespace std;
-//Tablice
+
+// Tablice
 double temperatury[100] = { 0 }; // Przechowuje wartości temperatur
-char symbole[100] = { 0 };        // Przechowuje symbole skali ('C','F','K')
+char symbole[100] = { 0 };       // Przechowuje symbole skali ('C','F','K')
 int dataCounter = 0;
 
+// Funkcje walidacji
+double readDouble() {
+	double value;
+		while (!(cin >> value)) {
+			cin.clear(); // Czyszczenie stanu strumienia
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Usuwanie błędnych danych z bufora
+			cout << "Niepoprawne dane. Wprowadz liczbe:\a ";
+		}
+	return value;
+}
+
+int readInt() {
+	int value;
+	while (!(cin >> value)) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Niepoprawne dane. Wprowadz liczbe calkowita:\a ";
+	}
+	return value;
+}
+
 //Definicje funkcji:
-double FtoC (double F) {
+double FtoC(double F) {
 	return (F - 32.0) * 5.0 / 9.0;
 }
 double FtoK(double F) {
@@ -28,36 +52,33 @@ double KtoF(double K) {
 double KtoC(double K) {
 	return (K * 9.0 / 5.0 - 459.67);
 }
-//Funkcje pomocnicze
+// Funkcje pomocnicze
 double pobierz_F() {
-	double fahrenheit;
-	cout << "Podaj temperature w stopniach Fahrenheita: " << endl;
-	cin >> fahrenheit;
-	return fahrenheit;
+	cout << "Podaj temperature w stopniach Fahrenheita: ";
+	return readDouble();
 }
+
 double pobierz_C() {
-	double celsjusz;
-	cout << "Podaj temperature w stopniach Celsjusza: " << endl;
-	cin >> celsjusz;
-	return celsjusz;
+	cout << "Podaj temperature w stopniach Celsjusza: ";
+	return readDouble();
 }
+
 double pobierz_K() {
-	double kelwin;
-	cout << "Podaj temperature w Kelwinach: " << endl;
-	cin >> kelwin;
-	return kelwin;
+	cout << "Podaj temperature w Kelwinach: ";
+	return readDouble();
 }
+
+// Funkcja do sprawdzania poprawności temperatur
 int check(double temp, char stopnie) {
-	if (temp < 0 && stopnie == 'K') {
-		return -999;
-	} else if (temp < -273.15 && stopnie=='C') {
-		return -999;
-	}
-	else if (temp < -469.67 && stopnie == 'F') {
+	if ((temp < 0 && stopnie == 'K') ||
+		(temp < -273.15 && stopnie == 'C') ||
+		(temp < -469.67 && stopnie == 'F')) {
 		return -999;
 	}
+	return 0;
 }
-//Funkcje do tablic
+
+// Funkcje do historii
 void zapiszDoHistorii(double staraTemp, char staraJednostka, double nowaTemp, char nowaJednostka) {
 	if (dataCounter < 100) {
 		temperatury[dataCounter] = staraTemp;
@@ -69,7 +90,7 @@ void zapiszDoHistorii(double staraTemp, char staraJednostka, double nowaTemp, ch
 		dataCounter++;
 	}
 	else {
-		cout << "Historia jest pelna! Nie mozna zapisac wiecej danych." << endl;
+		cout << "Historia jest pełna! Nie można zapisać więcej danych." << endl;
 	}
 }
 void pokazHistorie() {
@@ -106,6 +127,7 @@ void pokazHistorie() {
 	if (licznik == 0) {
 		cout << "Brak danych." << endl;
 	}
+
 }
 void usunZHistorii() {
 	system("cls");
@@ -114,7 +136,7 @@ void usunZHistorii() {
 		cout << "<" << (i / 2) + 1 << "> " << temperatury[i] << symbole[i] << " = " << temperatury[i + 1] << symbole[i + 1] << endl;
 	}
 	cout << "Podaj numer wpisu do usuniecia: ";
-	int numer_do_usuniecia =1 ;
+	int numer_do_usuniecia = 1;
 	cin >> numer_do_usuniecia;
 	if (numer_do_usuniecia < 1 || numer_do_usuniecia> dataCounter / 2) {
 		cout << "Niepoprawny numer." << endl;
@@ -122,15 +144,16 @@ void usunZHistorii() {
 	}
 	else
 	{
-		for (int i = numer_do_usuniecia* 2; i < dataCounter * 2; i++)
+		for (int i = numer_do_usuniecia * 2; i < dataCounter * 2; i++)
 		{
 			temperatury[i] = temperatury[i + 2];
 			symbole[i] = symbole[i + 2];
 		}
-		dataCounter=dataCounter-2;
+		dataCounter = dataCounter - 2;
 		cout << "Usunieto wpis z historii" << endl;
 	}
 }
+
 
 void modyfikacja_wpisu() {
 	system("cls");
@@ -139,13 +162,13 @@ void modyfikacja_wpisu() {
 		cout << "<" << (i / 2) + 1 << ">" << temperatury[i] << symbole[i] << "=" << temperatury[i + 1] << symbole[i + 1] << endl;
 	}
 	cout << "Podaj numer wpisu do ususniecia: " << endl;
-	int numer_do_usuniecia=1;
+	int numer_do_usuniecia = 1;
 	cin >> numer_do_usuniecia;
 	if (numer_do_usuniecia<1 || numer_do_usuniecia>dataCounter / 2) {
 		cout << "Niepoprawny numer" << endl;
 		return;
 	}
-	int index_modyfikacja=(numer_do_usuniecia-1)*2;
+	int index_modyfikacja = (numer_do_usuniecia - 1) * 2;
 	double newTemp;
 	char newSkala;
 
@@ -154,8 +177,7 @@ void modyfikacja_wpisu() {
 	cout << "Podaj nowa skale docelowa: "; // na co przeliczamy
 	char skala_docelowa;
 	cin >> skala_docelowa;
-
-	if (check(newTemp, newSkala)==-999) {
+	if (check(newTemp, newSkala) == -999) {
 		cout << "Bledna temperatura." << endl;
 		return;
 	}
@@ -206,18 +228,18 @@ void losowe_wypelnienie_Historii() {
 		char skalaDocelowa;
 
 		if (skalaWejsciowa == 'C') {
-			tempWejsciowa = (rand() %  1000) - 273.15;
-			skalaDocelowa = "FK"[rand() % 2]; 
+			tempWejsciowa = (rand() % 1000) - 273.15;
+			skalaDocelowa = "FK"[rand() % 2];
 			tempDocelowa = (skalaDocelowa == 'F') ? CtoF(tempWejsciowa) : CtoK(tempWejsciowa);
 		}
 		else if (skalaWejsciowa == 'F') {
-			tempWejsciowa = (rand() % 1000)+ -469.67; 
-			skalaDocelowa = "CK"[rand() % 2]; 
+			tempWejsciowa = (rand() % 1000) + -469.67;
+			skalaDocelowa = "CK"[rand() % 2];
 			tempDocelowa = (skalaDocelowa == 'C') ? FtoC(tempWejsciowa) : FtoK(tempWejsciowa);
 		}
 		else if (skalaWejsciowa == 'K') {
 			tempWejsciowa = (rand() % 1000) + 0;
-			skalaDocelowa = "CF"[rand() % 2]; 
+			skalaDocelowa = "CF"[rand() % 2];
 			tempDocelowa = (skalaDocelowa == 'C') ? KtoC(tempWejsciowa) : KtoF(tempWejsciowa);
 		}
 		zapiszDoHistorii(tempWejsciowa, skalaWejsciowa, tempDocelowa, skalaDocelowa);
@@ -258,6 +280,9 @@ int main() {
 				cout << "Temperatura w Celsjuszach: " << wynik << endl;
 				zapiszDoHistorii(fahrenheit, 'F', wynik, 'C');
 			}
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case 2: {
@@ -270,6 +295,9 @@ int main() {
 				cout << "Temperatura w Kelwinach: " << wynik << endl;
 				zapiszDoHistorii(fahr, 'F', wynik, 'C');
 			}
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case 3: {
@@ -282,6 +310,9 @@ int main() {
 				cout << "Temperatura w Fahrenheitach: " << wynik << endl;
 				zapiszDoHistorii(celsjusz, 'C', wynik, 'F');
 			}
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case 4: {
@@ -294,6 +325,9 @@ int main() {
 				cout << "Temperatura w Kelwinach: " << wynik << endl;
 				zapiszDoHistorii(cels, 'C', wynik, 'K');
 			}
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case 5: {
@@ -306,6 +340,9 @@ int main() {
 				cout << "Temperatura w Celsjuszach to: " << wynik << endl;
 				zapiszDoHistorii(kelwin, 'K', wynik, 'C');
 			}
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case 6: {
@@ -318,31 +355,47 @@ int main() {
 				cout << "Temperatura w Fahrenheitach to: " << wynik << endl;
 				zapiszDoHistorii(kel, 'K', wynik, 'F');
 			}
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case 7: {
 			pokazHistorie();
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case 8: {
 			usunZHistorii();
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
-		case 9:{
+		case 9: {
 			modyfikacja_wpisu();
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case 10: {
 			losowe_wypelnienie_Historii();
+			cout << "Nacisnij Enter zeby kontynuowac...";
+			cin.ignore();
+			cin.get();
 			break;
 		}
 		case -1:
 			cout << "Koniec programu" << endl;
 			return 0;
 		default:
-			cout << "Niepoprawna opcja. Sprobuj ponownie." << endl;
+			cout << "Nieprawidlowy wybor.\nNacisnij Enter...";
+			cin.ignore();
+			cin.get();
+			break;
 		}
-		cin.ignore();
-		cin.get();
 	}
 }
