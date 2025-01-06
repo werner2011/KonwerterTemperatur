@@ -47,10 +47,10 @@ double CtoK(double C) {
 	return (C + 273.15);
 }
 double KtoF(double K) {
-	return (K - 273.15);
+	return (K * 9.0 / 5.0 - 459.67);
 }
 double KtoC(double K) {
-	return (K * 9.0 / 5.0 - 459.67);
+	return (K -273.15);
 }
 // Funkcje pomocnicze
 double pobierz_F() {
