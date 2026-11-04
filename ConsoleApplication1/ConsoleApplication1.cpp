@@ -283,7 +283,7 @@ void losowe_wypelnienie_Historii()
 		}
 		else if (skalaWejsciowa == 'F')
 		{
-			tempWejsciowa = (rand() % 1000) + -469.67;
+			tempWejsciowa = (rand() % 1000) - 469.67;
 			skalaDocelowa = "CK"[rand() % 2];
 			tempDocelowa = (skalaDocelowa == 'C') ? FtoC(tempWejsciowa) : FtoK(tempWejsciowa);
 		}
@@ -313,6 +313,8 @@ void wyswietl_Menu()
 	cout << "10. Dodaj losowe wypelnienie historii" << endl;
 	cout << "-1. Zakoncz dzialanie programu" << endl;
 }
+
+#ifndef TEMPERATURE_CONVERTER_TEST
 int main()
 {
 	int wybor;
@@ -476,3 +478,4 @@ int main()
 		}
 	}
 }
+#endif
